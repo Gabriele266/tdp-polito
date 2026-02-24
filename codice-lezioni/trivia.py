@@ -3,7 +3,14 @@ import random
 class Player:
     def __init__(self, nickname: str):
         self.nickname = nickname
-        self.actual_score = 0
+
+    def write_result(self, level: int, filename: str) -> None:
+        try:
+            file = open(filename, "a")
+            file.write(f"{self.nickname} {level}\n")
+            file.close()
+        except FileNotFoundError:
+            print(f"Unable to open file {filename}")
 
 class Question:
     def __init__(self, text: str, difficulty:int, correct_answer: str, other_answers: list[str]):
@@ -75,6 +82,10 @@ class QuestionListHelper:
 
 class FileQuestionLoader:
     def __init__(self, filename: str):
+        """Create a new question loader to work from a specific file
+        {filename} path to the text file
+        """
+
         self.filename = filename
 
     def load(self) -> list[Question]:
@@ -124,3 +135,5 @@ while helper.has_available_questions(level):
         break
 
 print(f"Final score: {level}")
+p = Player(input("Inserisci il tuo nickname: "))
+p.write_result(level, "results.txt")
