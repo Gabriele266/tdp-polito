@@ -3,7 +3,6 @@
 # Prevedere la possibilità di definire entità che modellano i prodotti, i clienti, offrire interfaccie per calcolare i prezzi eventualmente scontati
 from enum import Enum
 
-
 class Prodotto:
     aliquota_iva = 0.22         # Parametro di classe, tutte le istanze avranno questo parametro
 
