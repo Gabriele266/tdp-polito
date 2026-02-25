@@ -57,17 +57,9 @@ class Question:
 
         return r
 
-class QuestionListHelper:
+class Game:
     def __init__(self, question_list: list[Question]):
         self.question_list = question_list
-
-    def __remove_question__(self, title: str):
-        for q in self.question_list:
-            if q.text == title:
-                self.question_list.remove(q)
-
-    def __filter_by_difficulty__(self, difficulty: int) -> list[Question]:
-        return list(filter(lambda q: q.difficulty == difficulty, self.question_list))
 
     def get_random_question(self, difficulty: int) -> Question:
         """Get the random question from the list, ensuring that the question has not been presented before"""
@@ -79,6 +71,15 @@ class QuestionListHelper:
 
     def has_available_questions(self, difficulty: int) -> bool:
         return len(self.__filter_by_difficulty__(difficulty)) > 0
+
+    def __remove_question__(self, title: str):
+        for q in self.question_list:
+            if q.text == title:
+                self.question_list.remove(q)
+
+    def __filter_by_difficulty__(self, difficulty: int) -> list[Question]:
+        return list(filter(lambda q: q.difficulty == difficulty, self.question_list))
+
 
 class FileQuestionLoader:
     def __init__(self, filename: str):
@@ -117,7 +118,7 @@ class FileQuestionLoader:
 print("Start")
 loader = FileQuestionLoader("input.txt")
 questions: list[Question] = loader.load()         # load all the questions
-helper = QuestionListHelper(questions)
+helper = Game(questions)
 print(f"Loaded {len(questions)} questions")
 print("Welcome to trivia game")
 player = Player("foo")
