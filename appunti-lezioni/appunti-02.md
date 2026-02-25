@@ -1,5 +1,5 @@
 
-# Lezione 02
+# Lezione Git Usage
 
 La **working copy** è la versione su cui sto lavorando attualmente (spesso la più aggiornata)
 
@@ -12,3 +12,5 @@ Ad ogni laboratorio e per l'esame vogliono che:
 - Clone su pc locale (anche direttamente con pycharm)
 - Commit per i lavori
 - Push sulla **mia repo remota**
+
+Tramite il menu di pycharm **manage remotes** posso gestire i diversi link remoti (menu Git / Manage Remotes)
