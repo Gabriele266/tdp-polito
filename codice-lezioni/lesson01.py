@@ -1,6 +1,6 @@
 # This is a sample Python script.
 # Codice python per un semplice gestionale
-# Prevedere la possibilità di definire entità che modellano i prodotti, i clienti, offrire interfaccie per calcolare i prezzi eventualmente scontati
+# Prevedere la possibilità di definire entità che modellano i prodotti, i clienti, offrire interfacce per calcolare i prezzi eventualmente scontati
 from enum import Enum
 
 class Prodotto:
