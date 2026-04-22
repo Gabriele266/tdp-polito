@@ -1,4 +1,3 @@
-
 # Ricorsione
 Una funzione è ricorsiva quando all'interno della funzione stessa viene richiamata se stessa
 
@@ -49,3 +48,41 @@ Una tecnica per migliorare l'efficienza è quella di utilizzare una cache in cui
 Ho 2 approcci:
 * Implementarla io tramite un dizionario --> la chiave è il valore del parametro, il valore è l'ultimo computato
 * Utilizzare il decoratore `@lru-cache` sulla funzione ricorsiva --> Fa tutto lui
+
+### Implementazione by-hand
+E' comodo realizzare una classe che raccolga tutti i metodi ricorsivi dell'algoritmo. 
+Come attributo della classe si mette la cache sotto forma di dizionario
+
+```python
+class Fibonacci:
+    def __init__(self) -> None:
+        self.cache: dict[int, int] = {          # inizializzo la cache con i valori noti dell'algoritmo
+            0: 0,
+            1: 1,
+        }
+
+    def fibonacci_cached(self, n: int) -> int:
+        if self.cache.get(n) is not None:
+            return self.cache[n]
+        else:
+            self.cache[n] = self.fibonacci_cached(n - 1) + self.fibonacci_cached(n - 2)     # l'ottimizzazione ha senso perchè ogni volta la chiamata si spezza in 2, avviando 2 nuovi rami di ricorsione
+
+        return self.cache[n]
+```
+
+Nota: il dizionario della cache viene inizializzato con i valori noti per evitare di dover scrivere nel codice delle if-else aggiuntive
+Ogni volta, controllo se il valore si trova già nella cache e se non esiste lo calcolo
+
+![img_2.png](img_2.png)
+Come si può osservare da questo grafico, la differenza in termini di performance con la ricorsione normale è decisamente impattante, 
+soprattutto all'aumentare del numero di elementi da calcolare. 
+Calcolando il numero di chiamate alla funzione ricorsiva posso ottenere il numero di branch che sono stati fatti
+
+Nella versione cached, il numero di chiamate ricorsive rimane pressochè costante, mentre nella versione
+Riassumendo: utilizzare la cache è comodo quando lo stesso problema compare più volte
+
+## Caching tramite decoratore
+Il decoratore `@lru_cache` restituisce l'ultimo valore computato della funzione su cui è posto. 
+La funzione deve essere hashable
+Riutilizza valori precedentemente calcolati
+Può causare problemi se le funzioni presentano altri effetti oltre la computazione. 
