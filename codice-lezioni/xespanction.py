@@ -18,8 +18,8 @@ def xespanction(string: str):       # str = 101X010
         left = string[0:l]
         right = string[l+1:]
 
-        append_intelligent(risultati, xespanction(left + "0" + right))
-        append_intelligent(risultati, xespanction(left + "1" + right))
+        for c in ["0", "1"]:                # itero su tutti gli step possibili
+            append_intelligent(risultati, xespanction(left + c + right))
 
         return risultati
 
