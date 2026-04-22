@@ -35,3 +35,17 @@ def solve(problem):
         solution = combine(sub_solutions)               # combino le soluzioni dei sotto-problemi in un unica soluzione
         return solution     
 ```
+
+## Struttura esplorativa
+Ho una serie di step. C'è sempre una condizione terminale
+Ogni volta, eseguo uno step, esploro e poi annullo lo step
+
+## Efficienza della ricorsione
+Utilizzando la ricorsione, posso trovarmi nel caso in cui alcuni elementi foo(X) vengono computati più volte, 
+soprattutto nella struttura divide-et-impera (più macro-problemi che danno luogo a parti della stessa suddivisione)
+
+Non partire subito dalla soluzione migliore, prima qualcosa di meno ottimizzato
+Una tecnica per migliorare l'efficienza è quella di utilizzare una cache in cui memorizzare un elemento che è già stato computato
+Ho 2 approcci:
+* Implementarla io tramite un dizionario --> la chiave è il valore del parametro, il valore è l'ultimo computato
+* Utilizzare il decoratore `@lru-cache` sulla funzione ricorsiva --> Fa tutto lui
