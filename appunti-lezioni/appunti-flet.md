@@ -43,3 +43,48 @@ In automatico, accedendo al campo `value` l'interfaccia viene aggiornata
 
 Nota: nel costruttore, la prima riga deve essere quella che dichiara il campo, altrimenti le chiamate super 
 possono causare problemi di dipendenza circolare e non trovare l'attributo
+
+## Visualizzazione di un set di risultati scrollabili
+Per visualizzare una lista di risultati che sia scrollabile, si utilizza il controllo `ListView`.
+Nota: per funzionare, è necessario dargli un'**altezza fissa** e inserirlo in un **Column**
+
+```python
+self._page.controls.append(
+ ft.Column(
+            controls=[ft.ListView(
+                height=300,
+                auto_scroll=True,
+            controls=[
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("fdas"),
+                ft.Text("Ciao"),
+                ft.Text("fdsa"),
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+                ft.Text("dfsa"),
+                ft.Text("Ciao"),
+                ft.Text("fdsaf"),
+                ft.Text("Ciao"),
+            ])],
+        )
+)
+```
+
+Per dare un bordo alla zona della ListView è sufficiente wrappare il controllo con un `Container` ed impostargli il bordo.

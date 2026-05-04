@@ -51,6 +51,10 @@ cnx.close()
 
 La query parametrica è sempre **una stringa con dei segnaposto**. Quando la eseguo dovrò sempre passare i valori effettivi **sotto forma di tupla**
 I parametri **sono ordinati**. 
+Nota: indifferentemente dal tipo di dato, si mette sempre `%s` e poi verrà convertito in automatico. 
+I valori devono essere preparati in una tupla prima, separatamente e non nella chiamata alla funzione
+`params = (matricola)`
+Poi passerò il `params` alla funzione `execute`. NON FARLO NELLA CHIAMATA ALLA FUNZIONE EXECUTE, non funziona
 
 ## Prototipo in lettura
 ```

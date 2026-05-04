@@ -80,4 +80,28 @@ Meglio passare le informazioni private tramite un option file, specificandolo co
 cnx = connection(option_files="/etc/mysql/connectors.cnf")
 ```
 Ognuno deve avere il suo file di specifiche mentre il codice può rimanere lo stesso. 
-E' importante modificare il file con le credenziali giuste
+E' importante modificare il file con le credenziali giuste  
+
+Contenuto di esempio: 
+```
+[client]
+user=preside
+password=iosonoilpreside24
+host=127.0.0.1
+database=iscritticorsi
+raise_on_warnings=True
+charset=utf8mb4
+collation=utf8mb4_general_ci
+```
+
+#### Problemi di collation
+La collation è un insieme di regole che permettono di confrontare i caratteri tra di loro e
+stabilirne l'ordine. Permette di definire se il controllo del testo delle query deve essere case sensitive o insensitive,
+oppure se gli accenti vengono accettati o meno. 
+
+Sia il database che il modulo python hanno una loro collation --> Un loro insieme di regole. Questi due insiemi devono coincidere. 
+
+L'errore del database: `DatabaseError(1273, "1273 (HY000): Unknown collation: 'utf8mb4_0900_ai_ci'", 'HY000')`
+indica che la  collation del database e quella del modulo non sono compatibili o riconosciute. 
+Tramite la riga della configurazione 
+`collation=utf8mb4_general_ci` imposto una collation compatibile
