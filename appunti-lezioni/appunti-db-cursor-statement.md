@@ -97,3 +97,4 @@ L'errore è `Unread result found` di tipo `InternalError`
 
 ## Conversione dei tipi
 In automatico la libreria converte i tipi SQl in tipi Python
+

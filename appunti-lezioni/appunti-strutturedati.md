@@ -64,3 +64,9 @@ Output:
 ```
 Counter({'Gold': 2, 'Silver': 1, 'Bronze': 1})
 ```
+
+## Creazione di copie complete di liste
+Crea una copia della lista
+```python
+copy.deepcopy(partial)
+```

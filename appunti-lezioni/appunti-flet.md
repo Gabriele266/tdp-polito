@@ -88,3 +88,27 @@ self._page.controls.append(
 ```
 
 Per dare un bordo alla zona della ListView è sufficiente wrappare il controllo con un `Container` ed impostargli il bordo.
+
+## Validazione avanzata degli input field
+Gli input field possono essere utilizzati sia per inserire del testo che per visualizzare delle informazioni dinamiche (quando gli passo il parametro `read_only=True`)
+Posso inoltre configurare una validazione avanzata dell'input tramite regex, utilizzando: 
+
+```python
+ft.TextField(label="Matricola",
+     hint_text="Inserisci una matricola",
+     input_filter=ft.InputFilter(
+         allow=False,
+         regex_string=r"^\d{0,6}$"
+     ),
+     on_change=self.controller.handle_change_matricola),
+```
+
+Tramite la classe `InputFilter` ho specificato una regex per verificare che il testo inserito sia una matricola (max 6 cifre)
+Esistono inoltre alcune classi che ereditano da `InputFilter` che sono già fatte.
+
+## Impostazione delle dimensioni della finestra
+```python
+page.window.width = 200        # window's width is 200 px
+page.window.height = 200       # window's height is 200 px
+page.window.resizable = False  # window is not resizable
+```

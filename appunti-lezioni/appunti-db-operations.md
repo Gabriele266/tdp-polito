@@ -42,7 +42,12 @@ Dopo aver impostato dei privilegi è necessario salvarli tramite **flush**:
 ```sql
 FLUSH PRIVILEGES;
 ```
-  
+
+### Visualizzare i privilegi di un utente
+```sql
+SHOW GRANTS FOR 'analyzer'@'localhost';
+```
+
 Per visualizzare tutti gli utenti presenti sulla macchina basta guardare il contenuto della tabella `mysql.user`:
 ```sql
 SELECT User, Host FROM mysql.user;
@@ -52,3 +57,7 @@ Per connettermi al database con uno specifico utente su un certo database:
 `mysql -u nome_utente -p nome_database` Mi richiederà la password
 
 E' buona pratica, dopo aver creato un utente, testarlo (verificando di poter fare le azioni che servono) connettendosi e provando dei comandi.
+
+## Importazione di dati da un file SQL
+Per eseguire un file sql che contiene il codice per la creazione del database e l'inserimento dei dati, è comodo:
+`mysql -u root -p < GOsales.sql`
