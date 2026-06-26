@@ -49,3 +49,30 @@ La posso inserire in condizioni per verificare un filtro nullabile, mettendo pri
 SELECT * FROM TABLE WHERE campo=COALESCE(<filter-value>, campo);
 ```
 In questo modo, se il filtro è popolato viene applicato, altrimenti si riduce ad un controllo a=a che sarà sempre vero. 
+
+## Prendere tabelle a coppie e generare le combinazioni
+Può essere utile dover prendere la stessa tabella a coppie. Ognuno dei due elementi cardine A e B viene joinato con tutte le informazioni necessarie per applicare i diversi filtri. 
+Alla fine, si raggruppa per tutte le coppie univoche e si calcola un aggregato (in questo caso utilizzando diverse funzioni per convertirlo)
+In questo caso una delle condizioni è che entrambe le tabelle cardine abbiano in comune lo stesso movie_id associato.  
+
+```sql
+# Considera tutte le coppie di autori nel database, prendendo tutte le informazioni di ognuno dei due
+# Per ognuno dei due autori, prende le informazioni e i film che hanno fatto insieme (la condizione sull'id del film deve corrispo# Per evitare che vengano considerate coppie tra lo stesso autore o con ordine diverso, si utilizza il <
+select rm1.name_id as Actor1, rm2.name_id as Actor2, sum( cast(replace(replace(m.worlwide_gross_income, '$', ''),',', '') as unsigned)) as Weight
+        from movie m, role_mapping rm1, role_mapping rm2, ratings r, names n1, names n2
+        where m.id = rm1.movie_id
+        and m.id = rm2.movie_id
+        and m.id = r.movie_id
+        and rm1.name_id = n1.id
+        and rm2.name_id = n2.id
+        and n1.date_of_birth IS NOT NULL
+        and n2.date_of_birth IS NOT NULL
+        and rm1.name_id < rm2.name_id	# Per evitare di ri-prendere gli stessi attori o lo stesso attore due volte
+        and r.avg_rating >= 6
+        and r.avg_rating <= 7
+        and m.worlwide_gross_income is not null
+        and m.worlwide_gross_income like '$%'
+        group by rm1.name_id, rm2.name_id		
+  # prendo tutte le coppie di autori univoche
+# La singola riga ha informazioni di due attori che hanno recitato nello stesso film
+```

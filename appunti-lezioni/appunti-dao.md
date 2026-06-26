@@ -15,6 +15,7 @@ Le classi che hanno bisogno di accedere al database vengono chiamate "client", n
 Le classi DAO utilizzano degli oggetti per trasferire le informazioni, i DTO (Data Transfer Object)
 Contengono solo dati, è comodo utilizzare le `dataclass` ed è buona pratica che abbiano i metodi `__eq__` e `__hash__` per confrontarli e ordinarli.
 ![img_3.png](img_3.png)  
+
 Alcuni punti importanti:
 * IL DAO NON HA STATO, è un SINGLETON, non può essere istanziato
 * Il dato **contiene** la **connection**
@@ -22,3 +23,18 @@ Alcuni punti importanti:
 * Fornisce dei metodi **CRUD**
 * Aggiunge metodi di **ricerca**
 * Restituisce sempre una collection di DTO
+
+## Prototipo generale del DAO
+```python
+
+class DAO:
+    @staticmethod
+    def load_qualcosa() -> list[Qualcosa]:
+        # Codice per caricare qualcosa
+        pass
+    
+    def __init__(self):
+        raise NotImplementedError("Il DAO NON DEVE ESSERE ISTANZIATO")
+```
+I metodi del DAO sono sempre statici, aprono e chiudono la connessione e il cursore. 
+Se ci sono tante entità di tipi diversi da gestire può essere utile **realizzare DAO Diversi**. 
