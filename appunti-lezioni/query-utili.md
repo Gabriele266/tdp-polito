@@ -2,7 +2,10 @@
 
 ## Indicazioni generali
 * FARE ATTENZIONE AI **NOMI DEI CAMPI SU CUI SI FA UNA JOIN**
-* Costruire prima le query provandole con dati mock
+* Costruire prima le query provandole con dati mock e verificando che i risultati portino a quelli negli output di esempio
+* Se possibile, costruire una query che restituisca direttamente la **tabella degli edges** da aggiungere al grafo
+* Se ragiono a coppie sul database, gli id devono essere uno più grande dell'altro (`>`) per evitare doppioni
+* Prima strutturare la query singola, poi quella a coppie
 
 Per il calcolo di statistiche aggregate è utile fare una JOIN con tutte le tabelle che hanno informazioni utili e realizzare
 una tabella riassuntiva unica, che abbia abbastanza informazioni per calcolare tutte le statistiche di interesse.  
@@ -96,3 +99,26 @@ data = tuple([range_s, range_e])
 ```
 e sono due istanze della classe `datetime` del modulo `datetime`. Non è necessario formattarle, ci pensa il db.  
 Per convertirle in stringa usare `datetime.strptime(event.data, "%Y-%m-%dT%H:%M:%S.%f")` con il formato adatto (gli ultimi sono i millisecondi)
+
+## Query prendendo a coppie i piloti
+Questa query resituisce direttamente gli archi per il grafo. 
+```sql
+# A coppie di pilota, il numero di gare che hanno corso come compagni nel range selezionato, qualificandosi
+# Prendo due piloti diversi con tutte le informazioni associate, guardo se sono compagni di squadra
+# Devono avere lo stesso constructorId per essere compagni di squadra
+SELECT REA.driverId as driver_a, REB.driverId as driver_b, COUNT(*) as weight
+FROM results REA, drivers DVA, races RSA,
+	results REB, drivers DVB, races RSB
+	WHERE REA.raceId = RSA.raceId AND 
+	REA.driverId = DVA.driverId AND
+	REA.position IS NOT NULL	AND			# Deve essere arrivato
+	RSA.year BETWEEN 2007 AND 2008	AND	# L'anno della gara deve essere nel range
+	REB.raceId = RSB.raceId AND 
+	REB.driverId = DVB.driverId AND
+	REB.position IS NOT NULL	AND	# Deve essere arrivato
+	RSB.year BETWEEN 2007 AND 2008 AND
+	REA.driverId > REB.driverId AND		# A e B devono essere due piloti distinti, facendo in modo che non ci siano ripetizioni
+	REA.raceId = REB.raceId AND			# I due piloti devono aver guidato nella stessa gara
+	REA.constructorId = REB.constructorId 	# A e B devono avere lo stesso costruttore
+	GROUP BY REA.driverId, REB.driverId;
+```

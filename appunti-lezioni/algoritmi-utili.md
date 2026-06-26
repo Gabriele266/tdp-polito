@@ -8,6 +8,7 @@
 * Il backtracking deve sempre **ripristinare lo stato della memoria condivisa** alla **situazione in cui era prima della chiamata** alla funzione
   - Ciò che aggiungo va tolto
 * La soluzione finale **deve essere sempre copiata** (`mialista.copy()`) per evitare che qualcuno la modifichi
+* La ricorsione può essere anche utilizzata per **"pescare" nodi dalle diverse componenti connesse**, associando ad ogni componente connessa un indice
 
 ## DFS Con numero esatto di archi nel percorso
 Ricerca di un percorso da `start` fino a `end` con esattamente il numero di archi `max_len` e funzione obiettivo massimizzata, su grafo direzionato e pesato.
