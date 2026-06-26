@@ -1,5 +1,9 @@
 # Query utili
 
+## Indicazioni generali
+* FARE ATTENZIONE AI **NOMI DEI CAMPI SU CUI SI FA UNA JOIN**
+* Costruire prima le query provandole con dati mock
+
 Per il calcolo di statistiche aggregate è utile fare una JOIN con tutte le tabelle che hanno informazioni utili e realizzare
 una tabella riassuntiva unica, che abbia abbastanza informazioni per calcolare tutte le statistiche di interesse.  
 
@@ -76,3 +80,19 @@ select rm1.name_id as Actor1, rm2.name_id as Actor2, sum( cast(replace(replace(m
   # prendo tutte le coppie di autori univoche
 # La singola riga ha informazioni di due attori che hanno recitato nello stesso film
 ```
+
+## Query con ricerca di righe la cui data sta in un range di date
+```sql
+SELECT oi.product_id, COUNT(*) as numero_vendite FROM order_items oi, orders o, products p
+        WHERE oi.product_id = p.product_id AND
+        oi.order_id = o.order_id AND 
+        o.order_date BETWEEN %s AND %s
+	    group by oi.product_id;
+```
+
+Le due date vengono fornite con la riga: 
+```python
+data = tuple([range_s, range_e])
+```
+e sono due istanze della classe `datetime` del modulo `datetime`. Non è necessario formattarle, ci pensa il db.  
+Per convertirle in stringa usare `datetime.strptime(event.data, "%Y-%m-%dT%H:%M:%S.%f")` con il formato adatto (gli ultimi sono i millisecondi)
