@@ -9,6 +9,7 @@
   - Ciò che aggiungo va tolto
 * La soluzione finale **deve essere sempre copiata** (`mialista.copy()`) per evitare che qualcuno la modifichi
 * La ricorsione può essere anche utilizzata per **"pescare" nodi dalle diverse componenti connesse**, associando ad ogni componente connessa un indice
+* Verificare sempre le condizioni di potatura, cercando anche di **prevedere se il branch che si sta per creare può portare ad una soluzione o meno**
 
 ## DFS Con numero esatto di archi nel percorso
 Ricerca di un percorso da `start` fino a `end` con esattamente il numero di archi `max_len` e funzione obiettivo massimizzata, su grafo direzionato e pesato.
@@ -101,3 +102,53 @@ def get_best_5_products(self):
 
     return sorted(stats, key=lambda row: row["value"], reverse=True)[0:5]           # Ordino la lista sulla base dei valori della chiave "value" di ogni riga e restituisco i primi 5
 ```
+
+## Pescaggio di un set di K elementi da K componenti connesse diverse con funzione obiettivo
+L'algoritmo prevede di pescare un **set ottimo di K elementi** prendendone al massimo **1 per ogni componente connessa** in modo ricorsivo,
+verificando l'**ottimalità** della soluzione tramite un certo **criterio**. 
+Ad ogni componente connessa si associa un indice, ogni volta si spawnano 2 branch: uno in cui si utilizza la componente connessa (che si sotto-ramifica in tutti gli elementi della componente) e uno in cui non la si usa (skippando all'indice successivo). 
+La soluzione usa il backtracking per ridurre la complessità di spazio e applica condizioni di potatura per prevedere se un branch può portare ad una soluzione ammissibile o meno. 
+
+```python
+  def search_best_set(self, K: int) -> list[Pilot] | None:
+        # Impossibilità del problema
+      if K <= 0:
+          return None
+
+      conn_comps = sorted(nx.connected_components(self.graph), key=len)
+      num_comps = len(conn_comps)
+        
+        # Impossibilità del problema
+      if K > num_comps:
+          return None
+
+      self.best_set = None
+      self.min_diff_dob = None
+      visited = []
+
+      self.__pescaggio_comp(0, num_comps, visited, K, conn_comps)
+      return self.best_set
+
+  def __pescaggio_comp(self, indice_comp: int, num_conn_comps: int, visited: list[Pilot], K: int, conn_comps: list[set[Pilot]]):
+      k_piccolo = len(visited)
+      if k_piccolo == K:
+          # Condizione di termine con verifica dell'ottimalità
+          diff = ((max(visited, key=lambda p: p.dob).dob) - (min(visited, key=lambda p: p.dob).dob)).days
+
+          if self.min_diff_dob is None or diff < self.min_diff_dob:
+              self.min_diff_dob = diff
+              self.best_set = visited.copy()
+      elif indice_comp < num_conn_comps and k_piccolo <= abs(indice_comp  - num_conn_comps):      # Verifico subito che esplorando questo ramo, si possa arrivare ad una soluzione.
+          # Se il secondo controllo fallisce significa che non ci sono abbastanza componenti connesse rimanenti per arrivare ad una soluzione ammissibile
+          # Posso esplorare una nuova componente
+          current_component = conn_comps[indice_comp]
+          for pilot in current_component:
+              visited.append(pilot)
+              self.__pescaggio_comp(indice_comp + 1, num_conn_comps, visited, K, conn_comps)
+              visited.pop()
+
+          # Branch non utilizzare la componente
+          self.__pescaggio_comp(indice_comp + 1, num_conn_comps, visited, K, conn_comps)
+```
+
+[algoritmo-pesca-componenti.pdf](../algoritmo-pesca-componenti.pdf)

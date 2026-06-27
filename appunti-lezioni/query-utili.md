@@ -6,6 +6,7 @@
 * Se possibile, costruire una query che restituisca direttamente la **tabella degli edges** da aggiungere al grafo
 * Se ragiono a coppie sul database, gli id devono essere uno più grande dell'altro (`>`) per evitare doppioni
 * Prima strutturare la query singola, poi quella a coppie
+* Guardare se nei dati ci sono **righe che non sono valide** e **escluderle a priori** (controlli `IS NOT NULL`)
 
 Per il calcolo di statistiche aggregate è utile fare una JOIN con tutte le tabelle che hanno informazioni utili e realizzare
 una tabella riassuntiva unica, che abbia abbastanza informazioni per calcolare tutte le statistiche di interesse.  
@@ -121,4 +122,19 @@ FROM results REA, drivers DVA, races RSA,
 	REA.raceId = REB.raceId AND			# I due piloti devono aver guidato nella stessa gara
 	REA.constructorId = REB.constructorId 	# A e B devono avere lo stesso costruttore
 	GROUP BY REA.driverId, REB.driverId;
+```
+
+## Utilizzo delle CTE
+
+```sql
+with airport_companies (airport_id, iata_code, num) as (
+	SELECT A.id, A.iata_code, (select count(distinct(F.airline_id))
+	from flights F 
+	where F.origin_airport_id = A.id or F.destination_airport_id = A.id)
+	FROM airports A
+)
+select airport_companies.airport_id, airport_companies.iata_code, airport_companies.num
+from  airport_companies
+ WHERE airport_companies.num >= 3 
+order by airport_companies.num;
 ```
