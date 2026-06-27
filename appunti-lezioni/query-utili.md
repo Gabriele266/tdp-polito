@@ -7,6 +7,7 @@
 * Se ragiono a coppie sul database, gli id devono essere uno più grande dell'altro (`>`) per evitare doppioni
 * Prima strutturare la query singola, poi quella a coppie
 * Guardare se nei dati ci sono **righe che non sono valide** e **escluderle a priori** (controlli `IS NOT NULL`)
+* Osservare se è possibile ragionare con **più livelli di aggregazione** (sotto query che aggrega a livello 3, query generale che aggrega a livello 2)
 
 Per il calcolo di statistiche aggregate è utile fare una JOIN con tutte le tabelle che hanno informazioni utili e realizzare
 una tabella riassuntiva unica, che abbia abbastanza informazioni per calcolare tutte le statistiche di interesse.  
@@ -138,3 +139,26 @@ from  airport_companies
  WHERE airport_companies.num >= 3 
 order by airport_companies.num;
 ```
+
+## Query con doppio livello di aggregazione
+Può essere utile ragionare con un doppio livello di aggregazione. Una prima query fornisce dati già aggregati ma con un certo livello di granularità ancora presente. 
+Alla sotto-query si da un nome (in questo caso T) e, utilizzandola in un'altra query più generale (inserendola nella `from`) la si aggrega ulteriormente per ottenere  
+dati più generici. 
+
+Sotto-query: per ogni aereoporto (identificato da id e iata code) una riga per ogni compagnia diversa che lo serve
+Aggrego ad un livello superiore in base alla tupla id-iata code dell'aereoporto, contando il numero di righe di ogni gruppo (che corrisponde al numero di compagnie diverse che lo servono)
+
+```sql
+select T.id, T.iata_code, count(*) as numero_compagnie
+from (select a.id, a.iata_code, f.airline_id
+	from airports a, flights f
+	where f.origin_airport_id = a.id or
+		f.destination_airport_id = a.id
+	group by a.id, a.iata_code, f.airline_id) T
+group by T.id, T.iata_code
+having numero_compagnie > 3
+order by numero_compagnie;
+
+
+```
+[query-livelli.pdf](query-livelli.pdf)

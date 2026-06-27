@@ -10,6 +10,8 @@
 * La soluzione finale **deve essere sempre copiata** (`mialista.copy()`) per evitare che qualcuno la modifichi
 * La ricorsione può essere anche utilizzata per **"pescare" nodi dalle diverse componenti connesse**, associando ad ogni componente connessa un indice
 * Verificare sempre le condizioni di potatura, cercando anche di **prevedere se il branch che si sta per creare può portare ad una soluzione o meno**
+* I **cammini devono essere semplici** --> Verificare di **non ri-visitare lo stesso nodo più volte** (`if next not in visited`). Se aggiungo subito il nodo a visited, il controllo deve essere fatto sul nuovo nodo successivo (E NON SUL NODO CORRENTE)
+* Attenzione ai **nomi utilizzati nelle variabili locali della funzione ricorsiva**, **non** devono **sovrascrivere** parametri della funzione
 
 ## DFS Con numero esatto di archi nel percorso
 Ricerca di un percorso da `start` fino a `end` con esattamente il numero di archi `max_len` e funzione obiettivo massimizzata, su grafo direzionato e pesato.
